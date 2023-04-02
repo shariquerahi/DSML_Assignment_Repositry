@@ -1,0 +1,144 @@
+SELECT SchemeID, COUNT(SchemeID) as count_scheme from MEMBERS GROUP BY SchemeID Order by count_scheme
+----------------------------------------------------------------------------------------------------------
+select M.MemberID, FirstName+' '+Surname
+, PrimaryEmail,
+case when MembershipStatusID = 2 then 'Active' else 'Inactive' end as 'Active Status',Schemeid,
+case when SchemeID = 1880 then 'Westpac' end as 'Scheme',
+DateCreated,(Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.CreatedBy) as 'CreatedBy', DateUpdated, (Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.UpdatedBy) as 'UpdatedBy',
+Reference1,Reference2, (Select count(jobid) from Jobs J where J.MemberID = M.memberid   )as 'JobCount'  , (Select count(jobid) from Jobs J where J.MemberID = M.memberid and JobStatusID not in (0,100) )as 'OpenJobs'
+from members M where SchemeID = 1880 order by 'Active Status'
+
+---------------------------------------------------------------------------------------------------------
+
+SELECT E.EmployeeID, E.Firstname+' '+E.Surname as 'Employee Name',case when E.Active= 1 then 'Active' else 'Inactive' end as 'Active Status'
+,E.NewTeamID,(Select T.TeamName from tm5_Team  T where T.TeamID = E.NewTeamID )as 'TeamName',E.NewSubTeamID,
+(Select ST.SubTeamName from tm5_SubTeam ST where ST.SubTeamId = E.NewSubTeamID)as 'Sub_TeamName',E.NewRegionID,
+
+(Select R.Description from tm5_Region R where R.RegionID = E.NewRegionID)as 'Region Name',E.NewSubRegionID,
+
+(Select SR.Name from tm5_SubRegion SR where SR.SubRegionId = E.NewSubRegionID)as 'SubRegion Name'
+
+FROM Employees E where EmployeeID in (
+Select distinct EmployeeID from [EmployeePermissions] where  PermissionID=131) 
+----------------------------------------------------------------------------------------------------------------------
+select M.MemberID, FirstName+' '+Surname as 'Member Name',M.CitiUniqueID, PrimaryEmail,
+case when MembershipStatusID = 2 then 'Active' else 'Inactive' end as 'Active Status',Schemeid,
+case when SchemeID = 1338 then 'City National Bank - Crystal Visa Infinite' end as 'CNB_Crystal_Scheme',
+case when SchemeID = 1339 then 'City National Bank - Crystal Commercial Card' end as 'CNB_Commercial_Scheme',
+DateCreated,(Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.CreatedBy) as 'CreatedBy', DateUpdated, (Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.UpdatedBy) as 'UpdatedBy',
+Reference1,Reference2, Reference3,DOB, (Select count(jobid) from Jobs J where J.MemberID = M.memberid)as 'JobCount'  , (Select count(jobid) from Jobs J where J.MemberID = M.memberid and JobStatusID not in (0,100)  )as 'OpenJobs'
+from members M where SchemeID IN (1338,1339) order by 'Active Status'
+---------------------------------------------------------------------------------------------------------------
+select M.MemberID, FirstName+' '+Surname as 'Member Name', PrimaryEmail, M.DateJoined,
+(Select MJ.JoiningDate A from MemberJoiningDetails MJ where MJ.MemberID = M.MemberID) AS 'MemberJoiningDate',
+case when MembershipStatusID = 2 then 'Active' else 'Inactive' end as 'Active Status',Schemeid,
+case when SchemeID = 933 then 'Swisscard - CSX Platinum Travel & Lifestyle Service' end as 'Scheme',
+DateCreated,(Select MJ.RenewalDate AS Renewal_Date from MemberJoiningDetails MJ where MJ.MemberID = M.MemberID),
+(Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.CreatedBy) as 'CreatedBy', DateUpdated, (Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.UpdatedBy) as 'UpdatedBy',
+Reference1,Reference2, (Select count(jobid) from Jobs J where J.MemberID = M.memberid   )as 'JobCount'  , (Select count(jobid) from Jobs J where J.MemberID = M.memberid and JobStatusID not in (0,100)  )as 'OpenJobs'
+from members M where SchemeID = 933 order by 'Active Status'
+----------------------------------------------------------------------------------------------------------------
+
+
+select M.MemberID, FirstName+' '+Surname as 'Member Name', PrimaryEmail,
+(Select MJ.JoiningDate A from MemberJoiningDetails MJ where MJ.MemberID = M.MemberID) AS 'MemberJoiningDate',
+case when MembershipStatusID = 2 then 'Active' else 'Inactive' end as 'Active Status',Schemeid,
+case when SchemeID = 1730 then 'Swisscard - Amex Centurion Dedicated Service' end as 'Scheme',
+DateCreated,(Select MJ.RenewalDate from MemberJoiningDetails MJ where MJ.MemberID = M.MemberID) as 'Renewal_Date',
+(Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.CreatedBy) as 'CreatedBy', DateUpdated, (Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.UpdatedBy) as 'UpdatedBy',
+Reference1,Reference2, (Select count(jobid) from Jobs J where J.MemberID = M.memberid   )as 'JobCount'  , (Select count(jobid) from Jobs J where J.MemberID = M.memberid and JobStatusID not in (0,100)  )as 'OpenJobs'
+from members M where SchemeID=1730 order by 'Active status'
+-----------------------------------------------------------------------------------------------------------------
+select M.MemberID, FirstName+' '+Surname as 'Member Name', FirstName,Surname, PrimaryEmail,
+case when MembershipStatusID = 2 then 'Active' else 'Inactive' end as 'Active Status',Schemeid,
+DateCreated,(Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.CreatedBy) as 'CreatedBy', DateUpdated, (Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = M.UpdatedBy) as 'UpdatedBy',
+Reference1,Reference2,Reference2 from members M where M.DateCreated>'2022-01-09 23:52:51.300' and CreatedBy not in (168,6685) order by MemberID
+
+---------------------------------------------------------------------------------------------------------------
+
+select MA.MemberID AS 'Pmy MemberID', (Select M.FirstName+' '+M.Surname as 'Member Name' from Members M where M.MemberID=MA.MemberID) AS 'Pmy MemberName',
+(Select M.MemberID from Members M where M.AdditionalMemberID=MA.AdditionalMemberID) AS 'Additional_MemberID',
+MA.AdditionalMemberName,MA.AdditionalMemberID,MA.Gender,MA.DateOfBirth   from MemberAdditionalMember MA
+where memberid in (4569906
+) order by MemberID
+
+
+Select j.JobID,j.MemberID,
+j.Subject,j.JobStatusID,j.DueDate,j.BriefDate,j.BriefOriginal from jobs j where memberID IN (select memberID from members where SchemeID = 674 and MembershipStatusID=2)
+and JobStatusID not in (0,100) ORDER BY MemberID IN ()
+
+SELECT DateJoined, COUNT(DateJoined) as 'Total_Active_MemberCreated'  
+ from MEMBERS
+where SchemeID=2042 and CreatedBy=168 and MembershipStatusID=2
+GROUP BY DateJoined Order by DateJoined
+
+ 
+	
+
+SELECT top 13 memberid, FirstName, Surname, Reference1,len(reference1) as 'Length',SchemeID, DateCreated,PrimaryID, CreatedBy, dateupdated FROM MEMBERS order by memberid desc
+
+
+1. Ctrl + H.
+2. Find what: ^[^;]+;[^;]+\K[^"]+
+3. Replace with: LEAVE EMPTY.
+4. CHECK Wrap around.
+5. CHECK Regular expression.
+6. Replace all.
+
+"https://www.google.com/search?q=is+there+anyway+to+remove+semicolon+in+notepad%2B%2B+in+the+start+of+the+some+of+the+rows&rlz=1C1GCEA_enIN956IN956&oq=is+there+anyway+to+remove+semicolon+in+notepad%2B%2B+in+the+start+of+the+some+of+the+rows&aqs=chrome..69i57.54824j0j7&sourceid=chrome&ie=UTF-8> "
+
+
+select J.JOBID,J.MemberID,J.SUBJECT,J.JobstatusID,
+Case when J.JobstatusID=100 then 'cancelled'
+     when J.JobstatusID=0 then 'Closed'
+	 else 'Open' end as 'Job_Status',J.DueDate, J.BriefDate,J.closedDate, 
+	 (Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = J.CreatedBy) as 'CreatedBy',
+	 (Select E.FirstName+' '+E.Surname from Employees E where E.EmployeeID = J.ClosedBy) as 'ClosedBy', J.attachedwithjob,J.RequestTypeDate
+from Jobs J where MemberID in  (select memberid from members where SchemeID=1309 
+and membershipstatusid=2) AND J.JOBID>11279843 and j.jobid in (11385459,11396031)  order by jobid desc
+
+select CreatedBy, SchemeID,count(1) as count1,UpdatedBy  from members 
+where schemeid in  (select CorporateSchemeID from CorporateScheme where name like 'Mastercard%'
+and CorporateshipStatusID=1) and CreatedBy in (168,6685)
+group by CreatedBy ,SchemeID,UpdatedBy order by  CreatedBy,count1 desc, UpdatedBy desc
+
+SELECT DateJoined, COUNT(DateJoined) as 'Total_Active_MemberCreated'  
+ from MEMBERS
+where SchemeID=2042 and CreatedBy=168 and MembershipStatusID=1
+GROUP BY DateJoined Order by DateJoined desc
+
+select  * from members WHERE SchemeID=2042 
+and CreatedBy=168 and DateCreated>'2023-02-01 12:56:41.380' and MembershipStatusID=2
+order by DateCreated desc
+
+    1 	sELECT x.MemberID, x.FirstName as 'DB_FName' ,y.FIRSTNAME_HUB,
+    2 	x.Surname,y.LASTNAME_HUB , X.Name,y.CUST_NAME, x.Reference1,y.CUSTOMER_NBR, X.PrimaryEmail,Y.Email_address_OHC_HUBP1,
+    3 	Y.CARDHOLDER_TYPE,X.Schemeid, Y.LAST4DIGITS
+    4 	
+    5 	FROM zzz_Not_Used_DB_HSBC_Visa_Tem x
+    6 	JOIN zzz_Not_Used_New_File_HSBC y on y.CUSTOMER_NBR=x.Reference1 ORDER BY X.Reference1
+    7 	---sELECT * FROM zzz_Not_Used_New_File_HSBC
+
+    1 	SELECT *
+    2 	FROM member
+    3 	WHERE SchemeID IN (2111, 2109)
+    4 	  AND PrimaryEmail IN (
+    5 	    SELECT PrimaryEmail
+    6 	    FROM member
+    7 	    WHERE SchemeID IN (2111, 2109)
+    8 	    GROUP BY PrimaryEmail
+    9 	    HAVING COUNT(*) > 1
+   10 	  )
+   11 	  AND REPLACE(LTRIM(REPLACE(Reference1, '0', ' ')), ' ', '0') IN (
+   12 	    SELECT REPLACE(LTRIM(REPLACE(Reference1, '0', ' ')), ' ', '0')
+   13 	    FROM member
+   14 	    WHERE SchemeID IN (2111, 2109)
+   15 	    GROUP BY REPLACE(LTRIM(REPLACE(Reference1, '0', ' ')), ' ', '0')
+   16 	    HAVING COUNT(*) > 1
+   17 	  )
+
+
+
+
+
+
